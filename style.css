@@ -1,0 +1,137 @@
+.logo {
+    height: 100px;
+    margin-bottom: 40px;
+}
+
+.roundimage {
+    border-radius: 50%;
+    height: 140px;
+    width: 140px;
+}
+
+.lead {
+    font-size: 25px;
+}
+
+footer {
+    border-top: 1px solid #DADADA;
+    height: 64px;
+    line-height: 64px;
+    font-size: 18px;
+    color: #333;
+    padding: 15px 0;
+}
+
+footer .giticon {
+    text-align: right;
+}
+
+footer .fab {
+    font-size: 36px;
+    color: #666;
+}
+
+footer .fab:hover {
+    color: #000;
+}
+
+.colpadding {
+    padding-bottom: 80px;
+}
+
+header {
+    border-bottom: 1px solid #DADADA;
+    padding: 30px 0;
+}
+
+header h1 {
+    margin: 0;
+    padding: 0;
+}
+
+#datepicker {
+    width: 100%;
+    margin-bottom: 15px;
+    height: 38px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #C8C8C8;
+}
+
+.columntitle {
+    margin-bottom: 15px;
+}
+
+.form {
+    border-bottom: 1px solid #DADADA;
+    padding: 30px 0;
+    background-color: #FAFAFA;
+}
+
+.graphs {
+    padding: 30px 0 60px 0;
+    min-height: 300px;
+}
+
+.graphs h3 {
+    margin-bottom: 10px;
+}
+
+.graphs canvas {
+    margin-bottom: 30px;
+}
+
+.sensorselectbox {
+    height: 200px;
+    background-color: #FFFFFF;
+    border: 1px solid #DADADA;
+    padding: 12px 15px;
+    border-radius: 5px;
+}
+
+.form-check {
+    margin-bottom: 2px;
+}
+
+.nosensors {
+    display: none;
+    text-align: center;
+    margin-top: 45px;
+    font-size: 24px;
+    color: #999;
+    font-style: italic;
+}
+
+.homebutton {
+    margin-top: 12px;
+    font-weight: 600;
+}
+
+.sensorselectbox label span {
+    height: 12px;
+    width: 12px;
+    display: inline-block;
+    margin-left: 10px;
+    border:1px solid #999;
+}
+
+.sensorselectbox input {
+    margin-right:5px;
+}
+
+@media (min-width: 768px) {
+    .formcolumn-left {
+        padding-right: 30px;
+    }
+    .formcolumn-right {
+        padding-left: 30px;
+    }
+}
+
+.even {
+    background-color: #E9ECEF; 
+}
+
+.lead {
+ font-size: 25px;
+}

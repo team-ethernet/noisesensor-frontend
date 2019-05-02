@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+   <head>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+	  <link rel="stylesheet" href="style.css">
+	  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta charset="utf-8">
+      <title>API of Noisy things</title>
+      <link rel="icon" href="images/icon2.ico"/>
+   </head>
+   <body>
+      <main role="main">
+			<div class="jumbotron">
+				<div class="container">
+					<a href="/"><img class="logo" src="images/noisyIoP_logo.png" alt="noisyIoT"></a>
+					<h1 class="display-3">API</h1>
+					<p class="lead">Welcome to the API for the database of Noisy things</p>
+					<hr class="my-4">
+					<p><font size="4">The API is accessed through <i>/data.xml</i> or <i>/data.json</i> depending on what format is to be returned. All data is returned as an array with the following fields:<br> 
+						<ul>
+							<li>noiseSensorId: the id of the sensor</li>
+							<li>date: the time of the measurement</li>
+							<li>value: the decibel measured</li>
+						</ul>
+						A selection of sensor data can be specified by typing a list of the following parameters in the URL as a query string. Parameter order does not matter.</font> </p>
+				</div>
+			</div>
+        <div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>ids</h3>
+					<p>Default value: All sensor id:s</p>
+				</div>
+				<div class="col-sm-6">
+					<p>Input format: <br><code>ids=id0,id1,...</code><br>or<br><code>ids=id0&ids=id1&ids=...</code></p>
+					<p>Description: <br>Returns only data from the specified sensors.</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="even">
+				<div class="row">
+					<div class="col-sm-6">
+						<h3>startDate</h3>
+						<p>Default value: 2000-01-01_00:00</p>
+					</div>
+					<div class="col-sm-6">
+						<p>Input format: <br><code>startDate=yyyy-MM-dd_HH:mm</code></p>
+						<p>Description: <br>Returns data from the start data and forward.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>endDate</h3>
+					<p>Default value: Current date</p>
+				</div>
+				<div class="col-sm-6">
+					<p>Input format: <br><code>endDate=yyyy-MM-dd_HH:mm</code></p>
+					<p>Description: <br>Returns data up until the end date.</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="even">
+				<div class="row">
+					<div class="col-sm-6">
+						<h3>sortBy</h3>
+						<p>Default value: Sorted by time</p>
+					</div>
+					<div class="col-sm-6">
+						<p>Input format: <br><code>sortBy=date or sortBy=value</code></p>
+						<p>Description: <br>Returns sorted values in given order.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>sortOrder</h3>
+					<p>Default: Ascending</p>
+				</div>
+				<div class="col-sm-6">
+					<p>Input format: <br><code>sortOrder=desc</code><br>or<br><code>sortOrder=asc</code></p>
+					<p>Description: Returns sorted values in ascending or descending order.</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="even">
+				<div class="row">
+					<div class="col-sm-6">
+						<h3>average</h3>
+						<p>Default value: False</p>
+					</div>
+					<div class="col-sm-6">
+						<p>Input format: <br><code>average=true</code><br>or<br><code>average=false</code></p>
+						<p>Description: <br>Returns average noise level for each sensor, and a global average for all sensors.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-6">
+					<h3>minNoiseLevel</h3>
+					<p>Default value: 0</p>
+				</div>
+				<div class="col-sm-6">
+					<p>Input format: <br><code>minNoiseLevel=x</code></p>
+					<p>Description: <br>Returns data where the noise level is above minNoiseLevel</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="even">
+				<div class="row">
+					<div class="col-sm-6">
+						<h3>maxNoiseLevel</h3>
+						<p>Default value: 200</p>
+					</div>
+					<div class="col-sm-6">
+						<p>Input format: <br><code>maxNoiseLevel=x</code></p>
+						<p>Description: <br>Returns data where the noise level is below maxNoiseLevel</p>
+					</div>
+				</div>
+			</div>
+		</div>
+         <!-- FOOTER -->
+         <footer>
+            <div class="container">
+               <div class="row">
+                  <div class="col-sm-10">© Team Ethernet 2019</div>
+                  <div class="col-sm-2 giticon"><a href="https://github.com/team-ethernet" title="Check out our github" target="_blank"><i class="fab fa-github"></i></a></div>
+               </div>
+            </div>
+         </footer>
+      </main>
+   </body>
+</html>
+
