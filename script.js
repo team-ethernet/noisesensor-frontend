@@ -1,6 +1,7 @@
 let startDate = moment().subtract(7, 'd');
 let endDate =  moment();
 
+
 //SORT ARRAY, GROUP BY ID
 const groupBy = key => array =>
     array.reduce((objectsByKeyValue, obj) => {
@@ -9,10 +10,6 @@ const groupBy = key => array =>
         return objectsByKeyValue;
     }, {});
 
-
-// $.getJSON("http://130.229.154.199:8080/data.json").then(function(json) {
-//     load(json);
-// });
     
 function load(json) {
     const groupById = groupBy('bn');
@@ -154,7 +151,7 @@ $("#submit-button").on("click", function() {
 });
 
 function update(startTimestamp, endTimestamp, mindB, maxdB) {
-    $.getJSON(`http://130.229.154.199:8080/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    $.getJSON(`http://localhost:8080/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
         load(json);
     });
