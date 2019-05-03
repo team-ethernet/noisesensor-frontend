@@ -128,10 +128,38 @@ header h1 {
     }
 }
 
+
+.lead {
+ font-size: 25px;
+}
+
+.apirow {
+	padding: 30px 30px;
+	border: 1px solid #DADADA;
+	background-color: #FAFAFA;
+	border-bottom: 0;
+}
+
+.apirow h3 {
+	margin-bottom:20px;
+}
+
+.apirow.last {
+	border-bottom: 1px solid #DADADA;
+}
+
 .even {
     background-color: #E9ECEF; 
 }
 
-.lead {
- font-size: 25px;
+.apihead {
+	padding: 30px 0;
+}
+
+.apijumbo {
+	margin-bottom:0;
+}
+
+.apibody {
+	margin-bottom:80px;
 }
