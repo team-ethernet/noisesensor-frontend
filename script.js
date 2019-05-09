@@ -10,7 +10,7 @@ const groupBy = key => array =>
         return objectsByKeyValue;
     }, {});
 
-    
+
 function load(json) {
     const groupById = groupBy('bn');
     var sortedarray = groupById(json);
@@ -34,6 +34,13 @@ function load(json) {
                     if (chart.data.datasets[i].label) {
                         legendHtml.push('<input id="sen'+i+'" type="checkbox" class="sen' + i + '" onclick="updateDataset(event, ' + '\'' + chart.legend.legendItems[i].datasetIndex + '\')"> <label for="sen' + i + '">' + chart.data.datasets[i].label + '<span style="background-color: ' + chart.data.datasets[i].borderColor + '"></span></label>');
                     }
+                }
+                //If no data was loaded selectallcheckbox is disabled, otherwise enabled
+                if(chart.data.datasets.length == 0){
+                  document.getElementById('selectallcheckbox').disabled = true;
+                }
+                else{
+                  document.getElementById('selectallcheckbox').disabled = false;
                 }
                 return legendHtml.join("");
             },
@@ -65,7 +72,7 @@ function load(json) {
             }
         }
     };
-    
+
     //LOOP THROUGH SORTED ARRAY AND INSERT INTO DATASETS
     for (var key in sortedarray) {
         var color = intToRGB(hashCode(key));
@@ -84,7 +91,7 @@ function load(json) {
                 y: sortedarray[key][i].v
             });
         }
-        
+
         config.data.datasets.push(datasetdata);
     }
 
@@ -94,7 +101,26 @@ function load(json) {
 
     //GENERATE LEGENDS
     document.getElementById('sensorselectbox').innerHTML = chart.generateLegend();
-
+}
+//Select all boxes.
+//If selectallcheckbox is checked, loop through data checkboxes, enable them and update graph.
+//Same for unchecking. 
+function selectall()
+{
+  if(document.getElementById('selectallcheckbox').checked){
+    for(var j = 0; j < chart.data.datasets.length; j++)
+    {
+      document.getElementById("sen" + j).checked = true;
+      updateDataset(event, chart.legend.legendItems[j].datasetIndex);
+    }
+  }
+  else {
+    for(var j = 0; j < chart.data.datasets.length; j++)
+    {
+      document.getElementById("sen" + j).checked = false;
+      updateDataset(event, chart.legend.legendItems[j].datasetIndex);
+    }
+  }
 }
 
 //UPDATE GRAPH
