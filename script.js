@@ -2,39 +2,39 @@ let startDate = moment().subtract(7, 'd');
 let endDate =  moment();
 let latestDataTimestamp = 0;
 let JSON = {};
-let visible = [];
+let visible = {};
 const liveUpdateTimeInterval = 5000;
-const APIPATH = "http://localhost:8080";
+const APIPATH = "http://130.229.148.25:8080";
 //FORMAT TO BE USED BY GRAPH
-const timeFormat = 'DD/MM/YYYY HH:mm:ss';
+    const timeFormat = 'DD/MM/YYYY HH:mm:ss';
 
-//GRAPH INITIAL CONFIG
-const initialConfig = {
-    type: 'line',
-    data: {
-        datasets: []
-    },
-    options: {
-        legendCallback: function (chart) {
-            var legendHtml = [];
-            legendHtml.push('<table>');
-            legendHtml.push('<tr>');
-            for (var i = 0; i < chart.data.datasets.length; i++) {
-                legendHtml.push('<div class="chart-legend" style="background-color:' + chart.data.datasets[i].backgroundColor + '"></div>');
-                if (chart.data.datasets[i].label) {
-                    legendHtml.push('<input id="sen'+i+'" type="checkbox" class="sen' + i + '" onclick="updateDataset(event, ' + '\'' + chart.legend.legendItems[i].datasetIndex + '\')"> <label for="sen' + i + '">' + chart.data.datasets[i].label + '<span style="background-color: ' + chart.data.datasets[i].borderColor + '"></span></label>');
+    //GRAPH INITIAL CONFIG
+    const initialConfig = {
+        type: 'line',
+        data: {
+            datasets: []
+        },
+        options: {
+            legendCallback: function (chart) {
+                var legendHtml = [];
+                legendHtml.push('<table>');
+                legendHtml.push('<tr>');
+                for (var i = 0; i < chart.data.datasets.length; i++) {
+                    legendHtml.push(`<div class="chart-legend" style="background-color: ${chart.data.datasets[i].backgroundColor}"></div>`);
+                    if (chart.data.datasets[i].label) {
+                        legendHtml.push(`<input id="sen${i}" type="checkbox" class="sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label>`);
+                    }
                 }
-            }
-            //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
-            if(chart.data.datasets.length == 0){
-                document.getElementById('selectallcheckbox').disabled = true;
-                document.getElementById('download-button').disabled = true;
-            }
-            else{
-                document.getElementById('selectallcheckbox').disabled = false;
-                document.getElementById('download-button').disabled = false;
-            }
-            return legendHtml.join("");
+                //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
+                if(chart.data.datasets.length == 0){
+                    document.getElementById('selectallcheckbox').disabled = true;
+                    document.getElementById('download-button').disabled = true;
+                }
+                else{
+                    document.getElementById('selectallcheckbox').disabled = false;
+                    document.getElementById('download-button').disabled = false;
+                }
+                return legendHtml.join("");
         },
         legend: {
             display: false
@@ -113,6 +113,9 @@ function insertData(json) {
                 y: sortedarray[key][i].v
             });
         }
+        if (visible[key]) {
+            datasetdata.hidden = false;
+        }
         
         chart.data.datasets.push(datasetdata);
     }
@@ -141,13 +144,16 @@ function selectall()
 }
 
 //UPDATE GRAPH
-updateDataset = function (e, datasetIndex) {
+updateDataset = function (e, datasetIndex, label) {
     var meta = chart.getDatasetMeta(datasetIndex);
-    if ($(".sen" + datasetIndex).is(":checked"))
+    if ($(".sen" + datasetIndex).is(":checked")) {
         meta.hidden = false;
-		visibleIds.push(meta.)
-    else
-        meta.hidden = null;
+		visible[label] = true;
+    }
+    else {
+        meta.hidden = true;
+        visible[label] = false;
+    }
 
     chart.update();
 };
@@ -188,15 +194,14 @@ $(function () {
 
 $("#submit-button").on("click", function() {
     window.clearInterval();
+    visible = {};
     let startTimestamp = startDate.toDate().getTime();
     let endTimestamp = endDate.toDate().getTime();
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
     update(startTimestamp, endTimestamp, mindB, maxdB);
-	console.log($("#liveUpdateCheckbox")[0].checked);
     if($("#liveUpdateCheckbox")[0].checked){
         window.setInterval(function(){
-			console.log("addData");
             addData();
             /// Call every 5 seconds. Stop using clearInterval() 
         }, liveUpdateTimeInterval);
@@ -220,11 +225,9 @@ function addData() {
     $.getJSON(`${APIPATH}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
         json.forEach(element => {
-			console.log(JSON);;
             JSON.unshift(element);
         });
         insertData(JSON);
-		console.log(json);
     });
 }
 
