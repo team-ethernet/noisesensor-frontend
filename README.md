@@ -3,6 +3,12 @@ Web page for the visualization of the noise sensor data
 
 ## Setup
 
+**In script.js**
+
+Change `liveUpdateTimeInterval` to the desired update interval in ms (Default: 5000ms)
+
+Change `APIPATH` to the URL of the server (Default: http://localhost:8080)
+
 
 ## Libraries used
 [Chart.js](https://chartjs.org)
