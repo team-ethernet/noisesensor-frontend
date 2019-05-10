@@ -115,6 +115,7 @@ function insertData(json) {
         config.data.datasets.push(datasetdata);
     }
 }
+
 //Select all boxes.
 //If selectallcheckbox is checked, loop through data checkboxes, enable them and update graph.
 //Same for unchecking.
@@ -195,6 +196,7 @@ $("#submit-button").on("click", function() {
         }, liveUpdateTimeInterval);
     }
 });
+
 //DOWNLOAD CHART
 //Uses Filesaver.js & canvas-toBlob.js
 $("#download-button").click(function() {
