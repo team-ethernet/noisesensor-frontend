@@ -4,7 +4,7 @@ let latestDataTimestamp = 0;
 let JSON = {};
 let visible = {};
 const liveUpdateTimeInterval = 5000;
-const APIPATH = "http://localhost:8080";
+const APIURL = "http://localhost:8080";
 //FORMAT TO BE USED BY GRAPH
     const timeFormat = 'DD/MM/YYYY HH:mm:ss';
 
@@ -222,7 +222,7 @@ function addData() {
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
 
-    $.getJSON(`${APIPATH}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
         json.forEach(element => {
             JSON.unshift(element);
@@ -232,7 +232,7 @@ function addData() {
 }
 
 function update(startTimestamp, endTimestamp, mindB, maxdB) {
-    $.getJSON(`${APIPATH}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
         load(json);
     });
