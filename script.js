@@ -35,12 +35,14 @@ function load(json) {
                         legendHtml.push('<input id="sen'+i+'" type="checkbox" class="sen' + i + '" onclick="updateDataset(event, ' + '\'' + chart.legend.legendItems[i].datasetIndex + '\')"> <label for="sen' + i + '">' + chart.data.datasets[i].label + '<span style="background-color: ' + chart.data.datasets[i].borderColor + '"></span></label>');
                     }
                 }
-                //If no data was loaded selectallcheckbox is disabled, otherwise enabled
+                //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
                 if(chart.data.datasets.length == 0){
                   document.getElementById('selectallcheckbox').disabled = true;
+                  document.getElementById('download-button').disabled = true;
                 }
                 else{
                   document.getElementById('selectallcheckbox').disabled = false;
+                  document.getElementById('download-button').disabled = false;
                 }
                 return legendHtml.join("");
             },
@@ -104,7 +106,7 @@ function load(json) {
 }
 //Select all boxes.
 //If selectallcheckbox is checked, loop through data checkboxes, enable them and update graph.
-//Same for unchecking. 
+//Same for unchecking.
 function selectall()
 {
   if(document.getElementById('selectallcheckbox').checked){
@@ -174,6 +176,13 @@ $("#submit-button").on("click", function() {
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
     update(startTimestamp, endTimestamp, mindB, maxdB);
+});
+//DOWNLOAD CHART
+//Uses Filesaver.js & canvas-toBlob.js
+$("#download-button").click(function() {
+ 	    $("#canvas1").get(0).toBlob(function(blob) {
+    		saveAs(blob, "chart.png");
+		});
 });
 
 function update(startTimestamp, endTimestamp, mindB, maxdB) {
