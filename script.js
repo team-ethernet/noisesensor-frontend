@@ -4,7 +4,7 @@ let latestDataTimestamp = 0;
 let JSON = {};
 let visible = {};
 const liveUpdateTimeInterval = 5000;
-const APIURL = "http://130.229.148.25:8080";
+const APIURL = "http://localhost:8080";
 //FORMAT TO BE USED BY GRAPH
     const timeFormat = 'DD/MM/YYYY HH:mm:ss';
 
