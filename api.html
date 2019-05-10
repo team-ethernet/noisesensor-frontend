@@ -40,7 +40,7 @@
 			<div class="row">
 				<div class="col-md-6">
 					<h3>/data</h3>
-					<strong>Description</strong><p>Returns the average value for each selected sensor.</p>
+					<strong>Description</strong><p>Returns the data for each selected sensor.</p>
 				</div>
 				<div class="col-md-6">
 					<strong>Output format</strong><br>
@@ -54,12 +54,12 @@
 			<div class="row">
 				<div class="col-md-6">
 					<h3>/data/min</h3>
-					<strong>Description</strong><p>Returns the highest measurement.</p>
+					<strong>Description</strong><p>Returns the lowest measurement for each selected sensor.</p>
 				</div>
 				<div class="col-md-6">
 					<strong>Output format</strong><br>
 					<samp>
-						[<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp}<br>]
+						[<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>...<br>]
 					</samp>
 				</div>
 			</div>
@@ -68,12 +68,12 @@
 			<div class="row">
 				<div class="col-md-6">
 					<h3>/data/max</h3>
-					<strong>Description</strong><p>Returns the highest measurement.</p>
+					<strong>Description</strong><p>Returns the highest measurement for each selected sensor.</p>
 				</div>
 				<div class="col-md-6">
 					<strong>Output format</strong><br>
 					<samp>
-						[<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp}<br>]
+						[<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>{"bn":String, "u":"dB", "v":float, "t": Unix Timestamp},<br>...<br>]
 					</samp>
 				</div>
 			</div>
