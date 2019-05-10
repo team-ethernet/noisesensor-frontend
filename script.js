@@ -80,6 +80,8 @@ const groupBy = key => array =>
 function load(json) {
     //DRAW GRAPH
     var ctx = document.getElementById("canvas1").getContext("2d");
+	if(typeof chart !== "undefined")
+		chart.destroy();
     chart = new Chart(ctx, initialConfig);
 
     insertData(json);
