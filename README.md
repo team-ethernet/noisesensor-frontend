@@ -1,5 +1,11 @@
 # noisesensor-frontend
 Web page for the visualization of the noise sensor data
+## Pages
+**index.html** - The front page 
+
+**visual.html** - The visualization of the data received
+
+**api.html** - Documentation of the REST API
 ## Setup
 **In script.js**  
 Change `liveUpdateTimeInterval` to the desired update interval in ms (Default: 5000ms)  
