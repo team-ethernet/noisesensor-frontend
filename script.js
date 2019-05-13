@@ -10,6 +10,7 @@ const APIURL = "http://localhost:8080";
 
     //GRAPH INITIAL CONFIG
     const initialConfig = {
+
         type: 'line',
         data: {
             datasets: []
@@ -25,14 +26,17 @@ const APIURL = "http://localhost:8080";
                         legendHtml.push(`<input id="sen${i}" type="checkbox" class="sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label>`);
                     }
                 }
+
                 //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
                 if(chart.data.datasets.length == 0){
                     document.getElementById('selectallcheckbox').disabled = true;
                     document.getElementById('download-button').disabled = true;
+                    document.getElementById('download-data').disabled=true;
                 }
                 else{
                     document.getElementById('selectallcheckbox').disabled = false;
                     document.getElementById('download-button').disabled = false;
+                    document.getElementById('download-data').disabled=false;
                 }
                 return legendHtml.join("");
         },
@@ -118,7 +122,7 @@ function insertData(json) {
         if (visible[key]) {
             datasetdata.hidden = false;
         }
-        
+
         chart.data.datasets.push(datasetdata);
     }
 	chart.update();
@@ -127,6 +131,7 @@ function insertData(json) {
 //Select all boxes.
 //If selectallcheckbox is checked, loop through data checkboxes, enable them and update graph.
 //Same for unchecking.
+
 function selectall()
 {
   if(document.getElementById('selectallcheckbox').checked){
@@ -134,6 +139,7 @@ function selectall()
     {
       document.getElementById("sen" + j).checked = true;
       updateDataset(event, chart.legend.legendItems[j].datasetIndex, chart.data.datasets[j].label);
+      //document.getElementById('selectallcheckbox').checked = false;
     }
   }
   else {
@@ -205,9 +211,11 @@ $("#submit-button").on("click", function() {
     if($("#liveUpdateCheckbox")[0].checked){
         window.setInterval(function(){
             addData();
-            /// Call every 5 seconds. Stop using clearInterval() 
+            /// Call every 5 seconds. Stop using clearInterval()
         }, liveUpdateTimeInterval);
     }
+    document.getElementById('selectallcheckbox').checked = false;
+    selectall();
 });
 
 //DOWNLOAD CHART
@@ -216,6 +224,39 @@ $("#download-button").click(function() {
  	    $("#canvas1").get(0).toBlob(function(blob) {
     		saveAs(blob, "chart.png");
 		});
+});
+
+//DOWNLOAD DATA
+$("#download-data").click(function() {
+  var json_output;
+  var maxdb = $("#maxdBInput").val();
+  var mindb = $("#mindBInput").val();
+
+  $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindb}&maxNoiseLevel=${maxdb}`)
+  .then(function(json) {
+      json.forEach(element => {
+          JSON.unshift(element);
+      });
+      Filesaver.saveAs(json, "data.txt")
+  });
+  /*
+  for(var k=0; k < chart.data.datasets.length; k++){
+    if(document.getElementById("sen" + k).checked){
+    alert("1");
+     //json_output += JSON.stringify(chart.data.datasets[k].data[0]);
+     //alert(JSON.stringify(chart.data.datasets[0].data));
+     console.log(chart.data.datasets[0].data);
+
+     var FileSaver = require('file-saver');
+     var blob = new Blob(json_output, {type: "text/plain;charset=utf-8"});
+     alert(blob);
+     FileSaver.saveAs(blob, "data.txt");
+
+     alert("5");
+
+    }
+  }
+  */
 });
 
 function addData() {
@@ -233,9 +274,10 @@ function addData() {
     });
 }
 
-function update(startTimestamp, endTimestamp, mindB, maxdB) {
+function update(startTimestamp, endTimestamp, mindB, maxdB){
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
         load(json);
     });
+
 }
