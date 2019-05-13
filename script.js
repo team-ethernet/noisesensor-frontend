@@ -226,9 +226,7 @@ function addData() {
 
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-        json.forEach(element => {
-            JSON.unshift(element);
-        });
+        JSON = json.concat(JSON);
         insertData(JSON);
     });
 }
