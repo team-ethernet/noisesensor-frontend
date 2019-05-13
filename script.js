@@ -4,7 +4,7 @@ let latestDataTimestamp = 0;
 let JSON_DATA = {};
 let visible = {};
 const liveUpdateTimeInterval = 5000;
-const APIURL = "http://localhost:8080";
+const APIURL = "http://130.229.148.25:8080";
 //FORMAT TO BE USED BY GRAPH
     const timeFormat = 'DD/MM/YYYY HH:mm:ss';
 
@@ -238,6 +238,33 @@ $("#download-button").click(function() {
  	    $("#canvas1").get(0).toBlob(function(blob) {
     		saveAs(blob, "chart.png");
 		});
+});
+
+$(".dropdown-menu").on("click", "li a", function() {
+  //alert("texten är :" +$(this).tesxt());
+  var option = $(this).text();
+  console.log(option);
+
+  switch (option) {
+    case "PNG":
+      $("#canvas1").get(0).toBlob(function(blob) {
+        saveAs(blob, "chart.png");
+      });
+      break;
+
+    case "CSV":
+      alert("convert to csv");
+      break;
+
+    case "JSON":
+      downloadObjectAsJson();
+      
+      break;
+
+    default:
+      alert("something went wrong");
+
+  }
 });
 
 function addData() {
