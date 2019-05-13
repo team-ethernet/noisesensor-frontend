@@ -19,11 +19,12 @@ Change `APIURL` to the URL of the server (Default: http://localhost:8080)
 [Bootstrap](https://bootstrap.com)  
 [Font Awesome](https://fontawesome.com/)
 ## Authors
-Anton Bothin  
-Erik Flink  
-Nelly Friman  
-Jacob Klasmark  
-Valter Lundegårdh  
-Isak Olsson  
-Andreas Sjödin  
-Carina Wickström  
+Erik Flink   \
+Isak Olsson \
+Nelly Friman \
+Anton Bothin   \
+Andreas Sjödin \
+Jacob Klasmark  \
+Carina Wickström \
+Valter Lundegårdh 
+ 

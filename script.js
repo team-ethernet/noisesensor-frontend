@@ -187,7 +187,7 @@ function intToRGB(i) {
 //When the download button is pressed this function will run
 //It will go through all the data that is currently loaded and if it is marked as visible
 //it will add it to dataStr. This variable is a string of all the data that is currently
-//being showed and will then become a json file which will be downloaded by the user. 
+//being showed and will then become a json file which will be downloaded by the user.
 function downloadObjectAsJson(){
   var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSON_DATA.filter((item) => visible[item.bn])));
   var downloadAnchorNode = document.createElement('a');
@@ -248,10 +248,8 @@ function addData() {
 
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-        json.forEach(element => {
-            JSON_DATA.unshift(element);
-        });
-        insertData(JSON_DATA);
+      JSON = json.concat(JSON);
+      insertData(JSON);
     });
 }
 
