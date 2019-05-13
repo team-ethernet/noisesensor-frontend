@@ -1,7 +1,7 @@
 let startDate = moment().subtract(7, 'd');
 let endDate =  moment();
 let latestDataTimestamp = 0;
-let JSON = {};
+let JSON_DATA = {};
 let visible = {};
 const liveUpdateTimeInterval = 5000;
 const APIURL = "http://localhost:8080";
@@ -95,7 +95,7 @@ function load(json) {
 
 function insertData(json) {
     chart.data.datasets = [];
-    JSON = json;
+    JSON_DATA = json;
     const groupById = groupBy('bn');
     var sortedarray = groupById(json);
     //LOOP THROUGH SORTED ARRAY AND INSERT INTO DATASETS
@@ -183,6 +183,20 @@ function intToRGB(i) {
 
     return "00000".substring(0, 6 - c.length) + c;
 }
+//DOWNLOAD DATA
+//When the download button is pressed this function will run
+//It will go through all the data that is currently loaded and if it is marked as visible
+//it will add it to dataStr. This variable is a string of all the data that is currently
+//being showed and will then become a json file which will be downloaded by the user.
+function downloadObjectAsJson(){
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSON_DATA.filter((item) => visible[item.bn])));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("download", "data.json");
+  document.body.appendChild(downloadAnchorNode); //required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
 
 //DATERANGEPICKER
 $(function () {
@@ -226,39 +240,6 @@ $("#download-button").click(function() {
 		});
 });
 
-//DOWNLOAD DATA
-$("#download-data").click(function() {
-  var json_output;
-  var maxdb = $("#maxdBInput").val();
-  var mindb = $("#mindBInput").val();
-
-  $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindb}&maxNoiseLevel=${maxdb}`)
-  .then(function(json) {
-      json.forEach(element => {
-          JSON.unshift(element);
-      });
-      Filesaver.saveAs(json, "data.txt")
-  });
-  /*
-  for(var k=0; k < chart.data.datasets.length; k++){
-    if(document.getElementById("sen" + k).checked){
-    alert("1");
-     //json_output += JSON.stringify(chart.data.datasets[k].data[0]);
-     //alert(JSON.stringify(chart.data.datasets[0].data));
-     console.log(chart.data.datasets[0].data);
-
-     var FileSaver = require('file-saver');
-     var blob = new Blob(json_output, {type: "text/plain;charset=utf-8"});
-     alert(blob);
-     FileSaver.saveAs(blob, "data.txt");
-
-     alert("5");
-
-    }
-  }
-  */
-});
-
 function addData() {
     let startTimestamp = latestDataTimestamp + 1;
     let endTimestamp = moment().toDate().getTime();
@@ -267,8 +248,8 @@ function addData() {
 
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-        JSON = json.concat(JSON);
-        insertData(JSON);
+      JSON = json.concat(JSON);
+      insertData(JSON);
     });
 }
 
@@ -277,5 +258,4 @@ function update(startTimestamp, endTimestamp, mindB, maxdB){
     .then(function(json) {
         load(json);
     });
-
 }
