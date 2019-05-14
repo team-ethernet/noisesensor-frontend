@@ -30,13 +30,13 @@ const APIURL = "http://130.229.148.25:8080";
                 //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
                 if(chart.data.datasets.length == 0){
                     document.getElementById('selectallcheckbox').disabled = true;
-                    document.getElementById('download-button').disabled = true;
-                    document.getElementById('download-data').disabled=true;
+                    // document.getElementById('download-button').disabled = true;
+                    // document.getElementById('download-data').disabled=true;
                 }
                 else{
                     document.getElementById('selectallcheckbox').disabled = false;
-                    document.getElementById('download-button').disabled = false;
-                    document.getElementById('download-data').disabled=false;
+                    // document.getElementById('download-button').disabled = false;
+                    // document.getElementById('download-data').disabled=false;
                 }
                 return legendHtml.join("");
         },
@@ -134,6 +134,7 @@ function insertData(json) {
 
 function selectall()
 {
+
   if(document.getElementById('selectallcheckbox').checked){
     for(var j = 0; j < chart.data.datasets.length; j++)
     {
@@ -142,7 +143,7 @@ function selectall()
       //document.getElementById('selectallcheckbox').checked = false;
     }
   }
-  else {
+  else if (JSON.stringify(JSON_DATA) != "{}"){
     for(var j = 0; j < chart.data.datasets.length; j++)
     {
       document.getElementById("sen" + j).checked = false;
@@ -258,7 +259,7 @@ $(".dropdown-menu").on("click", "li a", function() {
 
     case "JSON":
       downloadObjectAsJson();
-      
+
       break;
 
     default:
