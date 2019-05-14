@@ -72,7 +72,6 @@ const APIURL = "http://130.229.148.25:8080";
     }
 };
 
-
 //SORT ARRAY, GROUP BY ID
 const groupBy = key => array =>
     array.reduce((objectsByKeyValue, obj) => {
@@ -134,7 +133,6 @@ function insertData(json) {
 
 function selectall()
 {
-
   if(document.getElementById('selectallcheckbox').checked){
     for(var j = 0; j < chart.data.datasets.length; j++)
     {
@@ -163,7 +161,6 @@ updateDataset = function (e, datasetIndex, label) {
         meta.hidden = true;
         visible[label] = false;
     }
-
     chart.update();
 };
 
@@ -184,8 +181,8 @@ function intToRGB(i) {
 
     return "00000".substring(0, 6 - c.length) + c;
 }
-//DOWNLOAD DATA
-//When the download button is pressed this function will run
+//DOWNLOAD JSON DATA
+//When the download menu option JSON is pressed this function will run
 //It will go through all the data that is currently loaded and if it is marked as visible
 //it will add it to dataStr. This variable is a string of all the data that is currently
 //being showed and will then become a json file which will be downloaded by the user.
@@ -197,6 +194,23 @@ function downloadObjectAsJson(){
   document.body.appendChild(downloadAnchorNode); //required for firefox
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
+}
+
+//DOWNLOAD CSV DATA
+//When the download menu option CSV is pressed this function will run
+function downloadObjectAsCSV() {
+    var CSV_visible_objects = (JSON_DATA.filter((item) => visible[item.bn]));
+    var dataStr = "data:text/csv;charset=utf-8,BASE_NAME,UNIT,VALUE,TIME\n";
+    CSV_visible_objects.forEach(element => {
+        dataStr += element.bn + "," + element.u + "," + element.v + "," + element.t + "\n";
+    });
+
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     encodeURI(dataStr));
+    downloadAnchorNode.setAttribute("download", "data.csv");
+    document.body.appendChild(downloadAnchorNode); //required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
 }
 
 //DATERANGEPICKER
@@ -241,11 +255,9 @@ $("#download-button").click(function() {
 		});
 });
 
+//DROPDOWN MENU
 $(".dropdown-menu").on("click", "li a", function() {
-  //alert("texten är :" +$(this).tesxt());
   var option = $(this).text();
-  console.log(option);
-
   switch (option) {
     case "PNG":
       $("#canvas1").get(0).toBlob(function(blob) {
@@ -254,17 +266,15 @@ $(".dropdown-menu").on("click", "li a", function() {
       break;
 
     case "CSV":
-      alert("convert to csv");
+        downloadObjectAsCSV();
       break;
 
     case "JSON":
       downloadObjectAsJson();
-
       break;
 
     default:
-      alert("something went wrong");
-
+      alert("You must choose an existing download file type");
   }
 });
 
