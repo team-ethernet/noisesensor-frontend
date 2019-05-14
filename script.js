@@ -18,12 +18,9 @@ const APIURL = "http://130.229.148.25:8080";
         options: {
             legendCallback: function (chart) {
                 var legendHtml = [];
-                legendHtml.push('<table>');
-                legendHtml.push('<tr>');
                 for (var i = 0; i < chart.data.datasets.length; i++) {
-                    legendHtml.push(`<div class="chart-legend" style="background-color: ${chart.data.datasets[i].backgroundColor}"></div>`);
                     if (chart.data.datasets[i].label) {
-                        legendHtml.push(`<input id="sen${i}" type="checkbox" class="custom-control-input sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label class="custom-control-label" for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label>`);
+                        legendHtml.push(`<div><input id="sen${i}" type="checkbox" class="custom-control-input sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label class="custom-control-label" for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label></div>`);
                     }
                 }
                 return legendHtml.join("");
@@ -153,7 +150,7 @@ $("#selectallcheckbox").on("change",function() {
 //UPDATE GRAPH
 updateDataset = function (e, datasetIndex, label) {
     var meta = chart.getDatasetMeta(datasetIndex);
-    if ($(".sen" + datasetIndex).is(":checked")) {
+    if ($("#sen" + datasetIndex).is(":checked")) {
         meta.hidden = false;
 		visible[label] = true;
     }
