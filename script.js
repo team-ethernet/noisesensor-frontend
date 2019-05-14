@@ -23,20 +23,8 @@ const APIURL = "http://130.229.148.25:8080";
                 for (var i = 0; i < chart.data.datasets.length; i++) {
                     legendHtml.push(`<div class="chart-legend" style="background-color: ${chart.data.datasets[i].backgroundColor}"></div>`);
                     if (chart.data.datasets[i].label) {
-                        legendHtml.push(`<input id="sen${i}" type="checkbox" class="sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label>`);
+                        legendHtml.push(`<input id="sen${i}" type="checkbox" class="custom-control-input sen${i}" onclick="updateDataset(event, ${chart.legend.legendItems[i].datasetIndex}, '${chart.data.datasets[i].label}')"> <label class="custom-control-label" for="sen${i}"> ${chart.data.datasets[i].label} <span style="background-color: ${chart.data.datasets[i].borderColor}"></span></label>`);
                     }
-                }
-
-                //If no data was loaded selectallcheckbox & downloadbox is disabled, otherwise enabled
-                if(chart.data.datasets.length == 0){
-                    document.getElementById('selectallcheckbox').disabled = true;
-                    // document.getElementById('download-button').disabled = true;
-                    // document.getElementById('download-data').disabled=true;
-                }
-                else{
-                    document.getElementById('selectallcheckbox').disabled = false;
-                    // document.getElementById('download-button').disabled = false;
-                    // document.getElementById('download-data').disabled=false;
                 }
                 return legendHtml.join("");
         },
@@ -72,6 +60,7 @@ const APIURL = "http://130.229.148.25:8080";
     }
 };
 
+
 //SORT ARRAY, GROUP BY ID
 const groupBy = key => array =>
     array.reduce((objectsByKeyValue, obj) => {
@@ -88,6 +77,11 @@ function load(json) {
     chart = new Chart(ctx, initialConfig);
 
     insertData(json);
+	if(chart.data.datasets.length == 0){
+        document.getElementById('selectallcheckbox').disabled = true;
+    } else {
+        document.getElementById('selectallcheckbox').disabled = false;
+    }
     //GENERATE LEGENDS
     document.getElementById('sensorselectbox').innerHTML = chart.generateLegend();
 }
@@ -105,8 +99,11 @@ function insertData(json) {
             data: [],
             fill: false,
             borderColor: '#' + color,
-            lineTension: 0.2,
-            hidden: true
+            lineTension: 0.1,
+            hidden: true,
+			borderWidth: 2,
+			pointRadius: 1,
+			pointHoverRadius: 3
         };
         var i;
         for (i = 0; i < sortedarray[key].length; i++) {
@@ -131,24 +128,27 @@ function insertData(json) {
 //If selectallcheckbox is checked, loop through data checkboxes, enable them and update graph.
 //Same for unchecking.
 
-function selectall()
-{
-  if(document.getElementById('selectallcheckbox').checked){
-    for(var j = 0; j < chart.data.datasets.length; j++)
-    {
-      document.getElementById("sen" + j).checked = true;
-      updateDataset(event, chart.legend.legendItems[j].datasetIndex, chart.data.datasets[j].label);
-      //document.getElementById('selectallcheckbox').checked = false;
-    }
-  }
-  else if (JSON.stringify(JSON_DATA) != "{}"){
-    for(var j = 0; j < chart.data.datasets.length; j++)
-    {
-      document.getElementById("sen" + j).checked = false;
-      updateDataset(event, chart.legend.legendItems[j].datasetIndex, chart.data.datasets[j].label);
-    }
-  }
-}
+$("#selectallcheckbox").on("change",function() {
+	if(typeof chart !== "undefined") {
+	  if ($('#selectallcheckbox').is(":checked")) {
+		for(var j = 0; j < chart.data.datasets.length; j++)
+		{
+		  document.getElementById("sen" + j).checked = true;
+		  chart.getDatasetMeta(j).hidden = false;
+		  visible[chart.data.datasets[j].label] = true;
+		}
+	  }
+	  else {
+		for(var j = 0; j < chart.data.datasets.length; j++)
+		{
+		  document.getElementById("sen" + j).checked = false;
+		  chart.getDatasetMeta(j).hidden = true;
+		  visible[chart.data.datasets[j].label] = false;
+		}
+	  }
+		chart.update();
+	}
+});
 
 //UPDATE GRAPH
 updateDataset = function (e, datasetIndex, label) {
@@ -229,6 +229,8 @@ $(function () {
       });
 });
 
+
+
 $("#submit-button").on("click", function() {
     window.clearInterval();
     visible = {};
@@ -237,23 +239,22 @@ $("#submit-button").on("click", function() {
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
     update(startTimestamp, endTimestamp, mindB, maxdB);
-    if($("#liveUpdateCheckbox")[0].checked){
+    if($("#liveUpdateCheckbox")[0].checked) {
         window.setInterval(function(){
             addData();
+			let newendDate = moment();
+			if (newendDate > $("#datepicker").data().daterangepicker.endDate) {
+				$("#datepicker").data('daterangepicker').endDate = newendDate;
+				$("#datepicker").val($("#datepicker").data().daterangepicker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + newendDate.format('YYYY-MM-DD HH:mm'));
+			}
+			
             /// Call every 5 seconds. Stop using clearInterval()
         }, liveUpdateTimeInterval);
     }
     document.getElementById('selectallcheckbox').checked = false;
-    selectall();
+    //selectall();
 });
 
-//DOWNLOAD CHART
-//Uses Filesaver.js & canvas-toBlob.js
-$("#download-button").click(function() {
- 	    $("#canvas1").get(0).toBlob(function(blob) {
-    		saveAs(blob, "chart.png");
-		});
-});
 
 //DROPDOWN MENU
 $(".dropdown-menu").on("click", "li a", function() {
@@ -275,6 +276,7 @@ $(".dropdown-menu").on("click", "li a", function() {
 
     default:
       alert("You must choose an existing download file type");
+	 break;
   }
 });
 
@@ -286,8 +288,8 @@ function addData() {
 
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-      JSON = json.concat(JSON);
-      insertData(JSON);
+      JSON_DATA = json.concat(JSON_DATA);
+      insertData(JSON_DATA);
     });
 }
 

@@ -167,3 +167,13 @@ header h1 {
 .apibody {
 	margin-bottom:80px;
 }
+
+.custom-control-input:checked~.custom-control-label::before {
+	border-color: #17a2b8;
+	background-color: #17a2b8;
+}
+
+.custom-control-input:not(:disabled):active~.custom-control-label::before {
+    background-color: #138496;
+    border-color: #117a8b;
+}

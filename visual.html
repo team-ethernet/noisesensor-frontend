@@ -68,9 +68,15 @@
 						Select sensors to show
 					</h2>
 					<div id="selectallbox">
-						<input type= "checkbox" id="selectallcheckbox" value="Select all" onclick="selectall()" disabled=true> <label for= "selectallcheckbox"> Select all </label>
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" class="custom-control-input" id="selectallcheckbox" value="Select all" disabled=true>
+							<label for="selectallcheckbox" class="custom-control-label">Select all</label>
+						</div>
 					</div>
-					<div id="sensorselectbox" class="sensorselectbox overflow-auto">
+					<div class="sensorselectbox overflow-auto">
+						<div id="sensorselectbox" class="custom-checkbox custom-control">
+							
+						</div>
 					</div>
 				</div>
 			</div>
