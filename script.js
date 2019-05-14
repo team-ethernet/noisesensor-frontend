@@ -1,10 +1,12 @@
-let startDate = moment().subtract(7, 'd');
+let startDate = moment().subtract(2, 'd');
 let endDate =  moment();
+const liveUpdateTimeInterval = 5000;
+const APIURL = "http://130.229.148.25:8080";
+
+
 let latestDataTimestamp = 0;
 let JSON_DATA = {};
 let visible = {};
-const liveUpdateTimeInterval = 5000;
-const APIURL = "http://130.229.148.25:8080";
 //FORMAT TO BE USED BY GRAPH
     const timeFormat = 'DD/MM/YYYY HH:mm:ss';
 
@@ -44,14 +46,22 @@ const APIURL = "http://130.229.148.25:8080";
                 },
                 scaleLabel: {
                     display: true,
-                    labelString: 'Time'
-                }
+                    labelString: 'Time',
+					fontSize: 14
+                },
+				ticks: {
+					fontSize: 14,
+				}
             }],
             yAxes: [{
                 scaleLabel: {
                     display: true,
-                    labelString: 'dB'
-                }
+                    labelString: 'dB',
+					fontSize: 14
+                },
+				ticks: {
+					fontSize: 14,
+				}
             }]
         }
     }
@@ -69,8 +79,10 @@ const groupBy = key => array =>
 function load(json) {
     //DRAW GRAPH
     var ctx = document.getElementById("canvas1").getContext("2d");
+	
 	if(typeof chart !== "undefined")
 		chart.destroy();
+	
     chart = new Chart(ctx, initialConfig);
 
     insertData(json);
@@ -79,6 +91,7 @@ function load(json) {
     } else {
         document.getElementById('selectallcheckbox').disabled = false;
     }
+	
     //GENERATE LEGENDS
     document.getElementById('sensorselectbox').innerHTML = chart.generateLegend();
 }
@@ -184,13 +197,13 @@ function intToRGB(i) {
 //it will add it to dataStr. This variable is a string of all the data that is currently
 //being showed and will then become a json file which will be downloaded by the user.
 function downloadObjectAsJson(){
-  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSON_DATA.filter((item) => visible[item.bn])));
-  var downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href",     dataStr);
-  downloadAnchorNode.setAttribute("download", "data.json");
-  document.body.appendChild(downloadAnchorNode); //required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
+	var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSON_DATA.filter((item) => visible[item.bn])));
+	var downloadAnchorNode = document.createElement('a');
+	downloadAnchorNode.setAttribute("href",     dataStr);
+	downloadAnchorNode.setAttribute("download", "data.json");
+	document.body.appendChild(downloadAnchorNode); //required for firefox
+	downloadAnchorNode.click();
+	downloadAnchorNode.remove();
 }
 
 //DOWNLOAD CSV DATA
@@ -245,16 +258,15 @@ $("#submit-button").on("click", function() {
 				$("#datepicker").val($("#datepicker").data().daterangepicker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + newendDate.format('YYYY-MM-DD HH:mm'));
 			}
 			
-            /// Call every 5 seconds. Stop using clearInterval()
+            // Call every 5 seconds. Stop using clearInterval()
         }, liveUpdateTimeInterval);
     }
     document.getElementById('selectallcheckbox').checked = false;
-    //selectall();
 });
 
 
 //DROPDOWN MENU
-$(".dropdown-menu").on("click", "li a", function() {
+$(".dropdown-menu").on("click", "a", function() {
   var option = $(this).text();
   switch (option) {
     case "PNG":
@@ -262,15 +274,12 @@ $(".dropdown-menu").on("click", "li a", function() {
         saveAs(blob, "chart.png");
       });
       break;
-
     case "CSV":
         downloadObjectAsCSV();
       break;
-
     case "JSON":
       downloadObjectAsJson();
       break;
-
     default:
       alert("You must choose an existing download file type");
 	 break;
