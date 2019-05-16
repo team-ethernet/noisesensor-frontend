@@ -1,7 +1,7 @@
 let startDate = moment().subtract(2, 'd');
 let endDate =  moment();
 const liveUpdateTimeInterval = 5000;
-const APIURL = "http://130.229.148.25:8080";
+const APIURL = "http://localhost:8080";
 
 
 let latestDataTimestamp = 0;
@@ -314,16 +314,17 @@ function addData() {
 
 function slideData() {
     let dateRangeStart = $("#datepicker").data().daterangepicker.startDate;
-    var startTimestamp = moment(dateRangeStart).add(1, "minutes").format("YYYY-MM-DD HH:mm");
-    $("#datepicker").data().daterangepicker.startDate = moment(startTimestamp);
-    let endTimestamp = moment().toDate().getTime();
-    //startTimestamp = moment(startTimestamp).unix(); //change here
+    var newstartTimestamp = moment(dateRangeStart).add(liveUpdateTimeInterval/1000, "seconds").format("YYYY-MM-DD HH:mm:ss");
+	console.log(newstartTimestamp);
+    $("#datepicker").data().daterangepicker.startDate = moment(newstartTimestamp);
+    let newendTimestamp = moment().toDate().getTime();
+    newstartTimestamp = moment(newstartTimestamp).unix();
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
 
-    $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    $.getJSON(`${APIURL}/data?startDate=${newstartTimestamp}&endDate=${newendTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-      JSON_DATA = json.concat(JSON_DATA);
+      JSON_DATA = json;
       insertData(JSON_DATA);
     });
 }
