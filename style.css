@@ -132,7 +132,6 @@ header h1 {
     }
 }
 
-
 .lead {
  font-size: 25px;
 }
@@ -176,4 +175,16 @@ header h1 {
 .custom-control-input:not(:disabled):active~.custom-control-label::before {
     background-color: #138496;
     border-color: #117a8b;
+}
+
+.static-sliding-window{
+    display: none;
+}
+
+.live{
+    float: left;
+}
+
+#submit-button{
+    margin-top: 10px;
 }
