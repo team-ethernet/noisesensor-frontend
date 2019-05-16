@@ -1,7 +1,7 @@
 let startDate = moment().subtract(2, 'd');
 let endDate =  moment();
 const liveUpdateTimeInterval = 5000;
-const APIURL = "http://130.229.148.25:8080";
+const APIURL = "http://localhost:8080";
 
 
 let latestDataTimestamp = 0;
@@ -97,12 +97,10 @@ function load(json) {
 }
 
 function insertData(json) {
-	console.log("1. We are at insertdata");
     chart.data.datasets = [];
     JSON_DATA = json;
     var groupById = groupBy('bn');
     var sortedarray = groupById(json);
-	console.log(sortedarray);
     //LOOP THROUGH SORTED ARRAY AND INSERT INTO DATASETS
     for (var key in sortedarray) {
 		
@@ -120,9 +118,7 @@ function insertData(json) {
         };
         var i;
         for (i = 0; i < sortedarray[key].length; i++) {
-            if(latestDataTimestamp<sortedarray[key][i].t){
-                latestDataTimestamp = sortedarray[key][i].t;
-            }
+
             datasetdata.data.push({
                 x: moment(sortedarray[key][i].t).format(timeFormat),
                 y: sortedarray[key][i].v
@@ -307,22 +303,20 @@ $("#liveUpdateCheckbox").on("change", function() {
 });
 
 function addData() {
-    let startTimestamp = latestDataTimestamp + 1;
+    let startTimestamp = $("#datepicker").data().daterangepicker.startDate.unix()*1000;
     let endTimestamp = moment().toDate().getTime();
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
 
     $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-      JSON_DATA = json.concat(JSON_DATA);
-      insertData(JSON_DATA);
+      insertData(json);
     });
 }
 
 function slideData() {
     let dateRangeStart = $("#datepicker").data().daterangepicker.startDate;
     var newStartTimestamp = moment(dateRangeStart).add(liveUpdateTimeInterval/1000, "seconds").format("YYYY-MM-DD HH:mm:ss");
-	console.log(newStartTimestamp);
     $("#datepicker").data().daterangepicker.startDate = moment(newStartTimestamp);
     let newEndTimestamp = moment().toDate().getTime();
     newStartTimestamp = moment(newStartTimestamp).unix()*1000;
