@@ -1,7 +1,7 @@
 let startDate = moment().subtract(2, 'd');
 let endDate =  moment();
 const liveUpdateTimeInterval = 5000;
-const APIURL = "http://localhost:8080";
+const APIURL = "http://130.229.148.25:8080";
 
 
 let latestDataTimestamp = 0;
@@ -240,17 +240,7 @@ $(function () {
 });
 
 
-
-$("#submit-button").on("click", function() {
-    window.clearInterval();
-    visible = {};
-    let startTimestamp = startDate.toDate().getTime();
-    let endTimestamp = endDate.toDate().getTime();
-    let mindB = $("#mindBInput").val();
-    let maxdB = $("#maxdBInput").val();
-    update(startTimestamp, endTimestamp, mindB, maxdB);
-    if($("#liveUpdateCheckbox")[0].checked) {
-        window.setInterval(function(){
+       var liveupdate = function(){
             if ($('input[name=window-type]:checked').val() == "sliding") {
                 slideData();
             }else{
@@ -261,8 +251,22 @@ $("#submit-button").on("click", function() {
                 $("#datepicker").data('daterangepicker').endDate = newendDate;
                 $("#datepicker").val($("#datepicker").data().daterangepicker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + newendDate.format('YYYY-MM-DD HH:mm'));
             }
-            // Call every 5 seconds. Stop using clearInterval()
-        }, liveUpdateTimeInterval);
+        }
+
+
+
+$("#submit-button").on("click", function() {
+	if(typeof liveID !== undefined) 
+		//window.clearInterval(liveID);
+	
+    visible = {};
+    let startTimestamp = startDate.toDate().getTime();
+    let endTimestamp = endDate.toDate().getTime();
+    let mindB = $("#mindBInput").val();
+    let maxdB = $("#maxdBInput").val();
+    update(startTimestamp, endTimestamp, mindB, maxdB);
+    if($("#liveUpdateCheckbox")[0].checked) {
+		liveID = setInterval(liveupdate, 5000);
     }
     document.getElementById('selectallcheckbox').checked = false;
 });
