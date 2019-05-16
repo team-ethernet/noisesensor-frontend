@@ -97,12 +97,15 @@ function load(json) {
 }
 
 function insertData(json) {
+	console.log("1. We are at insertdata");
     chart.data.datasets = [];
     JSON_DATA = json;
-    const groupById = groupBy('bn');
+    var groupById = groupBy('bn');
     var sortedarray = groupById(json);
+	console.log(sortedarray);
     //LOOP THROUGH SORTED ARRAY AND INSERT INTO DATASETS
     for (var key in sortedarray) {
+		
         var color = intToRGB(hashCode(key));
         var datasetdata = {
             label: key,
@@ -256,8 +259,8 @@ $(function () {
 
 
 $("#submit-button").on("click", function() {
-	if(typeof liveID !== undefined) 
-		//window.clearInterval(liveID);
+	if(typeof liveID !== "undefined") 
+		window.clearInterval(liveID);
 	
     visible = {};
     let startTimestamp = startDate.toDate().getTime();
@@ -318,18 +321,17 @@ function addData() {
 
 function slideData() {
     let dateRangeStart = $("#datepicker").data().daterangepicker.startDate;
-    var newstartTimestamp = moment(dateRangeStart).add(liveUpdateTimeInterval/1000, "seconds").format("YYYY-MM-DD HH:mm:ss");
-	console.log(newstartTimestamp);
-    $("#datepicker").data().daterangepicker.startDate = moment(newstartTimestamp);
-    let newendTimestamp = moment().toDate().getTime();
-    newstartTimestamp = moment(newstartTimestamp).unix();
+    var newStartTimestamp = moment(dateRangeStart).add(liveUpdateTimeInterval/1000, "seconds").format("YYYY-MM-DD HH:mm:ss");
+	console.log(newStartTimestamp);
+    $("#datepicker").data().daterangepicker.startDate = moment(newStartTimestamp);
+    let newEndTimestamp = moment().toDate().getTime();
+    newStartTimestamp = moment(newStartTimestamp).unix()*1000;
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
 
-    $.getJSON(`${APIURL}/data?startDate=${newstartTimestamp}&endDate=${newendTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    $.getJSON(`${APIURL}/data?startDate=${newStartTimestamp}&endDate=${newEndTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
     .then(function(json) {
-      JSON_DATA = json;
-      insertData(JSON_DATA);
+      insertData(json);
     });
 }
 
