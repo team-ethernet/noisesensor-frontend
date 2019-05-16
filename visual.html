@@ -55,10 +55,24 @@
 							<span class="input-group-text">dB</span>
 						</div>
 					</div>
-					<div class="custom-control custom-checkbox">
-						<input type="checkbox" id="liveUpdateCheckbox" class="custom-control-input" aria-label="Live update">
-						<label for="liveUpdateCheckbox" class="custom-control-label">Live update</label>
+					
+					<div class="live">
+						<div class="custom-control custom-checkbox">
+							<input type="checkbox" id="liveUpdateCheckbox" class="custom-control-input" aria-label="Live update">
+							<label for="liveUpdateCheckbox" class="custom-control-label">Live update</label>
+						</div>
+						<div class="static-sliding-window">
+							<div class="custom-control custom-radio custom-control-inline">
+								<input type="radio" value="static" name="window-type" id="static-window" class="custom-control-input" checked="">
+								<label for="static-window" class="custom-control-label">Static window</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input type="radio" value="sliding" name="window-type" id="sliding-window" class="custom-control-input">
+								<label for="sliding-window" class="custom-control-label">Sliding window</label>
+							</div>
+						</div>
 					</div>
+					
 					<div class="text-right">
 						<button id="submit-button" type="button" class="btn btn-info">Submit</button>
 					</div>

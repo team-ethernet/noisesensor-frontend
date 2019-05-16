@@ -251,13 +251,16 @@ $("#submit-button").on("click", function() {
     update(startTimestamp, endTimestamp, mindB, maxdB);
     if($("#liveUpdateCheckbox")[0].checked) {
         window.setInterval(function(){
-            addData();
-			let newendDate = moment();
-			if (newendDate > $("#datepicker").data().daterangepicker.endDate) {
-				$("#datepicker").data('daterangepicker').endDate = newendDate;
-				$("#datepicker").val($("#datepicker").data().daterangepicker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + newendDate.format('YYYY-MM-DD HH:mm'));
-			}
-			
+            if ($('input[name=window-type]:checked').val() == "sliding") {
+                slideData();
+            }else{
+                addData();
+            }
+            let newendDate = moment();
+            if (newendDate > $("#datepicker").data().daterangepicker.endDate) {
+                $("#datepicker").data('daterangepicker').endDate = newendDate;
+                $("#datepicker").val($("#datepicker").data().daterangepicker.startDate.format('YYYY-MM-DD HH:mm') + ' - ' + newendDate.format('YYYY-MM-DD HH:mm'));
+            }
             // Call every 5 seconds. Stop using clearInterval()
         }, liveUpdateTimeInterval);
     }
@@ -286,9 +289,35 @@ $(".dropdown-menu").on("click", "a", function() {
   }
 });
 
+//SLIDING WINDOW
+$("#liveUpdateCheckbox").on("change", function() {
+    if($("#liveUpdateCheckbox").is(":checked")){
+        $(".static-sliding-window").show();
+    }else{
+        $(".static-sliding-window").hide();
+    }
+   
+});
+
 function addData() {
     let startTimestamp = latestDataTimestamp + 1;
     let endTimestamp = moment().toDate().getTime();
+    let mindB = $("#mindBInput").val();
+    let maxdB = $("#maxdBInput").val();
+
+    $.getJSON(`${APIURL}/data?startDate=${startTimestamp}&endDate=${endTimestamp}&minNoiseLevel=${mindB}&maxNoiseLevel=${maxdB}`)
+    .then(function(json) {
+      JSON_DATA = json.concat(JSON_DATA);
+      insertData(JSON_DATA);
+    });
+}
+
+function slideData() {
+    let dateRangeStart = $("#datepicker").data().daterangepicker.startDate;
+    var startTimestamp = moment(dateRangeStart).add(1, "minutes").format("YYYY-MM-DD HH:mm");
+    $("#datepicker").data().daterangepicker.startDate = moment(startTimestamp);
+    let endTimestamp = moment().toDate().getTime();
+    //startTimestamp = moment(startTimestamp).unix(); //change here
     let mindB = $("#mindBInput").val();
     let maxdB = $("#maxdBInput").val();
 

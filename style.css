@@ -177,3 +177,15 @@ header h1 {
     background-color: #138496;
     border-color: #117a8b;
 }
+
+.static-sliding-window{
+    display: none;
+}
+
+.live{
+    float: left;
+}
+
+#submit-button{
+    margin-top: 10px;
+}
